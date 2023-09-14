@@ -10,5 +10,5 @@ dotnet test --filter AnagramTests
 Run benchmarks with 
 
 ```shell
-dotnet test --filter AnagramBenchmarks --logger "console;verbosity=detailed"
+dotnet test --filter AnagramBenchmarkTests --logger "console;verbosity=detailed"
 ```

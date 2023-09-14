@@ -1,65 +1,97 @@
 using System.Diagnostics;
+using BenchmarkDotNet.Attributes;
 
 namespace Anagram.Tests;
 
 using Xunit.Abstractions;
 
-[Collection("Sequential")]
+[MemoryDiagnoser]
 public class AnagramBenchmarks
 {
+    private const int Reps = 500;
     private readonly AnagramFinder _finder = new();
-    private readonly ITestOutputHelper _output;
 
-    public AnagramBenchmarks(ITestOutputHelper output)
+    [Benchmark]
+    public void ShortAnagram()
     {
-        _output = output;
-    }
-
-    [Theory]
-    [MemberData(nameof(Data))]
-    public void Tests(string description, string word1, string word2)
-    {
-        var stopwatch = new Stopwatch();
-        stopwatch.Start();
-
-        for (var i = 0; i < 500; i++)
+        for (var i = 0; i < Reps; i++)
         {
-            _finder.IsAnagram(word1, word2);
+            _finder.IsAnagram(
+                "a",
+                "a"
+            );
         }
-
-        stopwatch.Stop();
-        _output.WriteLine($"{description}: {stopwatch.Elapsed.TotalMilliseconds} ms");
     }
 
-    public static TheoryData<string, string, string> Data =>
-        new()
+    [Benchmark]
+    public void ShortNonAnagram()
+    {
+        for (var i = 0; i < Reps; i++)
         {
-            { "Short Anagram", "a", "a" },
-            { "Short non-anagram", "a", "b" },
-            {
-                "Short same",
+            _finder.IsAnagram(
+                "a",
+                "b"
+            );
+        }
+    }
+
+    [Benchmark]
+    public void ShortSame()
+    {
+        for (var i = 0; i < Reps; i++)
+        {
+            _finder.IsAnagram(
                 "qazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolp",
                 "qazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolp"
-            },
-            {
-                "Long anagram",
+            );
+        }
+    }
+
+    [Benchmark]
+    public void LongAnagram()
+    {
+        for (var i = 0; i < Reps; i++)
+        {
+            _finder.IsAnagram(
                 "pazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolp",
                 "qazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolq"
-            },
-            {
-                "Long non-anagram",
+            );
+        }
+    }
+
+    [Benchmark]
+    public void LongNonAnagram()
+    {
+        for (var i = 0; i < Reps; i++)
+        {
+            _finder.IsAnagram(
                 "qazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolp",
                 "qazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolq"
-            },
-            {
-                "Long non-anagram of differing lengths",
+            );
+        }
+    }
+
+    [Benchmark]
+    public void LongNonAnagramOfDifferingLengths()
+    {
+        for (var i = 0; i < Reps; i++)
+        {
+            _finder.IsAnagram(
                 "qazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolp",
                 "qazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolpqazwsxedcrfvtgbyhnujmikolp"
-            },
-            {
-                "Long non-anagram where first letter doesn't exist",
+            );
+        }
+    }
+
+    [Benchmark]
+    public void LongNonAnagramWhereFirsLetterDoesntExist()
+    {
+        for (var i = 0; i < Reps; i++)
+        {
+            _finder.IsAnagram(
                 "qwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop",
                 "zwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiopqwertyuiop"
-            },
-        };
+            );
+        }
+    }
 }
