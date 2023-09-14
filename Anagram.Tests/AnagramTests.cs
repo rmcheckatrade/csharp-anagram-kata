@@ -1,8 +1,8 @@
 using FluentAssertions;
-using Xunit.Abstractions;
 
 namespace Anagram.Tests;
 
+[Collection("Sequential")]
 public class AnagramTests
 {
     private readonly AnagramFinder _finder = new();

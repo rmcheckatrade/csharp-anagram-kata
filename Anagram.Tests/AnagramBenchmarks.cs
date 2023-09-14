@@ -4,6 +4,7 @@ namespace Anagram.Tests;
 
 using Xunit.Abstractions;
 
+[Collection("Sequential")]
 public class AnagramBenchmarks
 {
     private readonly AnagramFinder _finder = new();
@@ -27,7 +28,7 @@ public class AnagramBenchmarks
         }
 
         stopwatch.Stop();
-        _output.WriteLine($"{description}: {stopwatch.ElapsedMilliseconds} ms");
+        _output.WriteLine($"{description}: {stopwatch.Elapsed.TotalMilliseconds} ms");
     }
 
     public static TheoryData<string, string, string> Data =>
